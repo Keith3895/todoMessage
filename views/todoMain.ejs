@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>todo main</title>
+	<link rel="stylesheet" type="text/css" href="stylesheets/skeleton.css">
+	<link rel="stylesheet" type="text/css" href="stylesheets/modal.css">
+	<link rel="stylesheet" type="text/css" href="stylesheets/todolist.css">
+	<link rel="stylesheet" type="text/css" href="stylesheets/contactList.css">
+</head>
+<body>
+<style type="text/css">
+
+
+</style>
+	<div class="container">
+		<div >
+			<div class="row">
+				<div class="six columns">
+					<label for="todo">Insert task</label>
+					<input type="text" name="todo" id="todo" class="u-full-width">
+				</div>
+				<div class="six columns">
+					<label for="EndDate">End Date</label>
+					<input type="date" name="EndDate" id="EndDate" class="u-full-width">
+				</div>
+			</div>
+			<button id="myBtn">Assign Job to...</button>	
+			<input class="button-primary formSubmit" type="submit" name="submit">
+		</div>
+		
+			
+		
+
+
+		<div class="row to-do-list" id="taskList">
+		<h2>To do List</h2>
+
+		<ul class="twelve columns">
+			<% for (var i = 0; i < tasks.length; i++) { -%>
+				<li>
+					<input id="<%=tasks[i]._id%>" type="checkbox" class="checkTask">
+					<label for="<%=tasks[i]._id%>"><%=tasks[i].Content%></label>
+					<div class="cover"><a href="/todo/moreinfo/<%=tasks[i]._id%>">click here</a></div>
+				</li>
+			<% } -%>
+		</ul>
+		</div>
+
+
+
+	</div>
+	<div id="myModal" class="modal">
+	  <!-- Modal content -->
+	  <div class="modal-content">
+	    <div class="modal-header">
+	      <span class="close">&times;</span>
+	      <h2>Assign task to...</h2>
+	    </div>
+	    <div class="modal-body">
+	    	<div id="#container">
+	    	<div class="list-view"><ul id="contactList"></ul></div>
+	    		
+	    	</div>
+	    </div>
+	    <div class="modal-footer">
+	      <h3>Modal Footer</h3>
+	    </div>
+	  </div>
+	</div>
+	<script
+	  src="https://code.jquery.com/jquery-3.2.1.min.js"
+	  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+	  crossorigin="anonymous"></script>
+	  <script type="text/javascript" src="js/modal.js"></script>
+	<script type="text/javascript">
+
+	var date = new Date();
+	mon= date.getMonth()+1;
+	dateString = date.getFullYear();
+	dateString+="-"+mon;
+	dateString+="-"+date.getDate();
+	var assign;
+	 function assign(asd){
+	 	assign= $(asd).attr('id');
+	 	var modal = document.getElementById('myModal');
+	 	modal.style.display = "none";
+	 	console.log(assign);
+	 }
+		$('.formSubmit').on('click',function(){
+			var sendTask = {
+				Content : $('#todo').val(),
+				Cdate  	: dateString,
+				EndDate : $('#EndDate').val(),
+				assign 	: assign
+			};
+			$.ajax({
+			  url: "/todo/addtask",
+			  method: "POST",
+			  data: sendTask,
+			  success: function(tasks){
+			  	console.log(tasks);
+			  	str = "<li>"
+					  +"<input id="+tasks._id+" type=\"checkbox\" class=\"checkTask\">"
+					  +"<label for="+tasks._id+">"+tasks.Content+"</label>"
+				 	  +"<div class=\"cover\"><a href=\"/todo/moreinfo/"+tasks._id+"\">click here</a></div>"
+					  +"</li>";
+			  	$('#taskList ul').append(str);
+			  }
+			});
+		});
+		$('#myBtn').on('click',function(){
+
+			$.ajax({
+			  url: "/authorList",
+			  method: "GET",
+			  // data: sendTask,
+			  success: function(data){
+			  	$('#contactList li').remove();
+			  	console.log(data);
+			  	for(i in data){
+			  		str="<li onclick='assign(this)' id='"+data[i]._id+"'>"
+			        	+"<span class=\"avatar\"></span>"
+			        	+"<span class=\"name\">"+data[i].firstName+" "+data[i].lastName+"</span>"
+			      		+"</li>";
+			  		$('#contactList').append(str);
+			  	}
+			  	
+			  }
+			});	
+		});
+		$('.checkTask').change(function(){
+			val = $(this).attr('id');
+			if($(this).is(":checked")){
+				$.ajax({
+				  url: "/todo/done",
+				  method: "POST",
+				  data : val,
+				  success: function(data){
+				  	console.log(data);
+				  	if(data.done)
+				  		$('#'+data._id).prop('checked', true);
+				  }
+				});
+			}else{
+				$.ajax({
+				  url: "/todo/undone",
+				  method: "POST",
+				  data : val,
+				  success: function(data){
+				  	console.log(data);
+				  	if(data.done)
+				  		$('#'+data._id).prop('checked', false);
+				  }
+				});
+
+			}
+
+		});
+		setInterval(function(){
+			$.ajax({
+			  url: "/todo/check",
+			  method: "GET",
+			  success: function(data){
+			  	for(i in data){
+			  		if(data[i].done)
+			  			$('#'+data[i]._id).prop('checked', true);
+			  		else		
+			  			$('#'+data[i]._id).prop('checked', false);
+			  	}
+			  	
+			  }
+			});	
+
+		},2000);
+	</script>
+</body>
+</html>

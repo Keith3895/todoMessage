@@ -1,0 +1,41 @@
+#container{
+  overflow-y: scroll;
+}
+#container .list-view {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: white;
+  z-index: 1;
+  transition: background 0.3s 0.1s;
+}
+#container .list-view ul#contactList li {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 70px;
+  border-bottom-width: 1px;
+  border-style: solid;
+  border-color: #ddd;
+  transition: transform 0.3s, opacity 0.3s 0.3s, border-color 0.3s 0.3s;
+}
+ul#contactList li .name {
+  -webkit-font-smoothing: antialiased;
+}
+ul#contactList li:hover {
+  background: #efefef;
+  cursor: pointer;
+}
+.avatar {
+  content: '';
+  display: inline-block;
+  vertical-align: middle;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: url("http://1.viki.io/a/ph/avatar_profile-acc6c5a5a9d35bd7d292dfd776cfec76.png?s=30x30&f=t&cb=1");
+  background-size: 100%;
+  margin: 15px 15px;
+}
