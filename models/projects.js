@@ -3,6 +3,7 @@ var ProjectSchema = new mongoose.Schema({
 	Name	: 		String,
 	Cdate 	: 		String,
 	EndDate : 		String,
+	done	: 		Boolean,
 	author: {
 	     type: mongoose.Schema.Types.ObjectId,
 	     ref: "User"
@@ -15,7 +16,7 @@ var ProjectSchema = new mongoose.Schema({
 		Name	: 	String,
 		todolist: 	[{
 			type: mongoose.Schema.Types.ObjectId,
-	     	ref: "Todo"
+	     	ref: "Todo"                                                     
 		}]
 	}]
 });
