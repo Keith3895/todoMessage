@@ -57,7 +57,7 @@ app.get('/authorList',function(req,res){
 });
 
 // app.listen(Process.env.port||Process.env.Port,function(){
-http.listen(9000,function(a){
+http.listen(Process.env.port||Process.env.Port,function(a){
 	console.log("==========================================================");
 	console.log("server Started");
 });
