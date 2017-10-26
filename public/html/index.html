@@ -1,0 +1,28 @@
+<style type="text/css">
+.collection-item i{
+	float: right;
+	cursor: pointer;
+}
+</style>
+<div class="container">
+	<div class="row">
+		
+		<ul class="collection with-header">
+			<li class="collection-header"><h4>List of projects</h4></li>
+			<li class="collection-item" ng-repeat="(key, value) in projects">
+				<p>
+				  <input type="checkbox" id="test5" />
+				  <label for="test5">{{value.Name}}</label>
+				</p>
+				
+
+				<span style="font-size: 1.2em;font-weight: 600">Due Date: </span> <span ng-bind="formatDate(value.EndDate)"></span>
+				<span style="font-size: 1.2em;font-weight: 600;margin-left: 15px"> Assigned To:</span>
+				<i class="material-icons tooltipped" data-position="bottom" data-delay="50" data-tooltip="List Tasks" ng-click="openProject(value._id)">assignment</i>
+			</li>
+
+		</ul>
+	</div>
+</div>
+	
+  <a class="btn-floating btn-large waves-effect waves-light red" href="./#/addProject"><i class="material-icons">add</i></a>

@@ -1,0 +1,57 @@
+<div class="container">
+  <div class="row">
+    <ul class="collapsible" data-collapsible="accordion">
+      <li>
+        <div class="collapsible-header"><i class="material-icons">arrow_drop_down</i>First</div>
+        <div class="collapsible-body">
+          <a href="" onclick="$('#modal1').modal('open');"><i class="material-icons tooltipped" data-position="bottom" data-delay="50" data-tooltip="Add Task">add_circle_outline</i></a>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+<div class="fixed-action-btn horizontal">
+    <a class="btn-floating btn-large red">
+      <i class="large material-icons">mode_edit</i>
+    </a>
+    <ul>
+      <li><a class="btn-floating red tooltipped" data-position="top" data-delay="20" data-tooltip="Add Sections"><i class="material-icons">format_list_bulleted</i></a></li>
+      <li><a class="btn-floating green tooltipped" data-position="top" data-delay="20" data-tooltip="Add Task"><i class="material-icons">check</i></a></li>
+      <li><a class="btn-floating blue tooltipped" data-position="top" data-delay="20" data-tooltip="Add Project"><i class="material-icons">card_travel</i></a></li>
+    </ul>
+  </div>
+
+
+
+
+
+  <!-- Modal Structure -->
+  <div id="modal1" class="modal modal-fixed-footer">
+    <form class="col s12" id="LoginForm" ng-submit="addTask()">
+    <div class="modal-content">
+      <h4>Add Task</h4>
+        <div class="row">
+          <div class="input-field col s12">
+            <input id="Content" name="Content" type="text" class="validate" ng-model='Content'>
+            <label for="Content">Task</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12">
+            <input id="EndDate" name="EndDate" type="text" class="validate datepicker" ng-model="EndDate">
+            <label for="EndDate">Due Date</label>
+          </div>
+        </div>
+        <!-- <div class="row">
+            <div class="input-field col s12">
+              <button class="btn waves-effect waves-light right" style="width:100%" type="submit" name="action" >Login
+                <i class="material-icons right">send</i>
+              </button>
+            </div>
+        </div> -->
+    </div>
+    <div class="modal-footer">
+      <button href="" class="modal-action modal-close waves-effect waves-green btn-flat ">Agree</button>
+    </div>
+    </form>
+  </div>

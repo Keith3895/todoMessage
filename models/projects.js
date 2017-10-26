@@ -1,8 +1,8 @@
 var mongoose = require("mongoose");
 var ProjectSchema = new mongoose.Schema({
 	Name	: 		String,
-	Cdate 	: 		String,
-	EndDate : 		String,
+	Cdate 	: 		Date,
+	EndDate : 		Date,
 	done	: 		Boolean,
 	author: {
 	     type: mongoose.Schema.Types.ObjectId,
@@ -12,6 +12,10 @@ var ProjectSchema = new mongoose.Schema({
 	     type: mongoose.Schema.Types.ObjectId,
 	     ref: "User"
 	},
+	members : [{
+	     type: mongoose.Schema.Types.ObjectId,
+	     ref: "User"
+	}],
 	Section:[{
 		Name	: 	String,
 		todolist: 	[{

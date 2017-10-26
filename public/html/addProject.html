@@ -1,0 +1,20 @@
+<div class="row">
+    <form class="col s12" ng-submit="addProject()">
+      <div class="row">
+        <div class="input-field col s6" >
+          <input id="projectName" type="text" class="validate" ng-model='projectName'>
+          <label for="projectName">Project Name</label>
+        </div>
+        <div class="input-field col s6">
+          <input id="endDate" type="text" class="validate datepicker" ng-model="EndDate">
+          <label for="endDate">Due Date</label>
+        </div>
+        <div class="input-field col s12">
+          <button class="btn waves-effect waves-light right" style="width:100%" type="submit" name="action" >add
+            <i class="material-icons right">send</i>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+        

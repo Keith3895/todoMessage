@@ -1,0 +1,39 @@
+<div class="row" ng-controller="LoginController">
+    <div class="col s12 m10 offset-m1 l4 offset-l4">
+      <div class="card-panel">
+        <h4 class="center">Login</h4>
+        <div class="row">
+    <form class="col s12" id="LoginForm" ng-submit="login()">
+      <div class="row">
+      <div class="input-field col s12">
+        <input id="username" name="username" type="text" class="validate" ng-model='username'>
+        <label for="username">UserName</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-field col s12">
+        <input id="password" name="password" type="password" class="validate" ng-model="password">
+        <label for="password">Password</label>
+      </div>
+    </div>
+    <div class="row">
+        <div class="input-field col s12">
+          <button class="btn waves-effect waves-light right" style="width:100%" type="submit" name="action" >Login
+            <i class="material-icons right">send</i>
+          </button>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="input-field col s12">
+          <a href="/forgotPassword" class="highlight">Forgot Password?</a>
+        </div>
+        <div class="input-field col s12">
+          <a href="#/signup" class="highlight">Sign Up</a>
+        </div>
+      </div>
+    </form>
+  </div>
+      </div>
+    </div>
+</div>

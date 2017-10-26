@@ -13,6 +13,7 @@ router.get("/register",middleware.notLoggedIn,function(req, res) {
 
 //handle sign up logic
 router.post("/register", function(req, res){
+    // console.log(req.body);
     var newUser = new User({
     	firstName: req.body.firstName,
     	lastName: req.body.lastName,
@@ -20,13 +21,15 @@ router.post("/register", function(req, res){
     });
     User.register(newUser, req.body.password, function(err, user){
         if(err){
-            return res.render("signup");
+            return res.send('err');//res.render("signup");
         }
         console.log("new user added");
         passport.authenticate("local")(req, res, function(){
            console.log("new user added message 1");
+           res.send(user);
         });
-        res.redirect('/auth/login');
+        // res.redirect('/auth/login');
+        // res.send('err');
     });
 });
 
@@ -36,11 +39,17 @@ router.get("/login",middleware.notLoggedIn, function(req, res){
 });
 
 //handling login logic
-router.post("/login", passport.authenticate("local", 
-    {
-        successRedirect: "/",
-        failureRedirect: "/auth/login"
-    }), function(req, res){
+router.post('/login',
+  passport.authenticate('local'),
+  function(req, res) {
+    // console.log(req.user);
+    res.send(req.user);
+  });
+router.post('/check',function(req,res){
+  if(req.user && req.body.id == req.user._id)
+    res.send('yes');
+  else
+    res.send('no');
 });
 
 // logout route
