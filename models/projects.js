@@ -17,11 +17,8 @@ var ProjectSchema = new mongoose.Schema({
 	     ref: "User"
 	}],
 	Section:[{
-		Name	: 	String,
-		todolist: 	[{
-			type: mongoose.Schema.Types.ObjectId,
-	     	ref: "Todo"                                                     
-		}]
+		type: mongoose.Schema.Types.ObjectId,
+     	ref: "Section"                                                     
 	}]
 });
 module.exports = mongoose.model("Project", ProjectSchema);

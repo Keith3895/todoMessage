@@ -4,13 +4,13 @@ var middleware = require("../middleware");
 var mongoose = require('mongoose');
 
 var todo = require('../models/todo');
-
-
+var Project  = require('../models/projects');
+var Section  = require('../models/section');
 router.get('/',middleware.isLoggedIn,function(req,res){
 	todo.find({},function(err,tasks){
 		if(err)
 			console.log(err);
-		res.render('todoMain',{tasks:tasks});	
+		res.send(tasks);	
 	});
 	
 });
@@ -34,6 +34,7 @@ router.get('/moreinfo/:id',function(req,res){
 });
 
 router.post('/addtask',function(req,res){
+	console.log(req.body);
 	req.body.done=false;
 	req.body.author = req.user._id;
 	if(req.body.assign)
@@ -41,7 +42,12 @@ router.post('/addtask',function(req,res){
 	todo.create(req.body,function(err,task){
 		if(err)
 			console.log(err);
-		res.send(task);	
+		console.log(req.body);
+		Section.findOne({'_id':req.body.SectionId},function(err,section){
+			section.todolist.push(task._id);
+			section.save();
+			res.send(task);
+		});
 	});
 });
 router.post('/done',function(req,res){	
