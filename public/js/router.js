@@ -29,6 +29,13 @@ app.config(function($routeProvider){
                     factory: checkRouting
                 }
     })
+    .when('/messages',{
+        templateUrl : '/html/message.html',
+        controller  : 'MessageController',
+        resolve: {
+                    factory: checkRouting
+                }
+    })
 	.otherwise({
 		template:"<h1>I'm still working on this, I'll send you the update soon.</h1>"
         // resolve: {
@@ -38,7 +45,8 @@ app.config(function($routeProvider){
 });
 
 var checkRouting= function ($rootScope, $location,$cookies,$http) {
-    $rootScope.userProfile = $cookies.get('userProfile');
+    $rootScope.userProfile = $cookies.getObject('userProfile');
+    console.log($cookies.getAll());
     if ($rootScope.userProfile && $rootScope.userProfile!='err' ) {
         isLoggedIn=false;
         $http({
@@ -49,11 +57,11 @@ var checkRouting= function ($rootScope, $location,$cookies,$http) {
           },
           data: {id:$rootScope.userProfile._id},
         }).then(function successCallback(response) {
-            console.log("here:"+response);
+            console.log("router:"+$rootScope.userProfile.username);
             if(response.data==='yes')
-                isLoggedIn= true;
+                return isLoggedIn= true;
             else
-                isLoggedIn= false;
+                return isLoggedIn= false;
           }, function errorCallback(response) {
             console.log('sent err: '+response);
             isLoggedIn= false;

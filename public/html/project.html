@@ -1,16 +1,26 @@
 <div class="container">
+
   <div class="row">
-    <ul class="collapsible" data-collapsible="accordion">
+    
+  </div>
+
+
+
+
+
+  <div class="row">
+    <ul class="collapsible col s9" data-collapsible="accordion">
       <li ng-repeat="(SectionKey, SectionValue) in project.Section">
         <div class="collapsible-header"><i class="material-icons">arrow_drop_down</i>{{SectionValue.Name}}</div>
         <div class="collapsible-body">
-          <a href="" ng-click="addTaskModal(SectionValue.Name)"><i class="material-icons tooltipped" data-position="bottom" data-delay="50" data-tooltip="Add Task">add_circle_outline</i></a>
+          <a href="" ng-click="addTaskModal(SectionValue)"><i class="material-icons tooltipped" data-position="bottom" data-delay="50" data-tooltip="Add Task">add_circle_outline</i></a>
           
           <ul>
             <li ng-repeat="(Todokey, TodoValue) in SectionValue.todolist">
               <p>
-                <input type="checkbox" id="{{TodoValue._id}}" />
+                <input type="checkbox" id="{{TodoValue._id}}" ng-checked="TodoValue.done" ng-click="checkedTask(TodoValue)" ng-model="TodoValue.checkedStatus"/>
                 <label for="{{TodoValue._id}}">{{TodoValue.Content}}  <strong>Due Date:</strong> {{TodoValue.EndDate}}</label>
+                <span><i class="material-icons" ng-click="openMessages(TodoValue)">chat</i></span>
               </p>
 
             </li>
@@ -18,6 +28,21 @@
         </div>
       </li>
     </ul>
+
+    <!-- Assing card starts here -->
+    <div class="card col s3">
+      <h4>Assigned to : </h4>
+      <ul class="collection">
+        <li class="collection-item avatar" ng-repeat="(Assignkey, AssignValue) in project.members">
+          <i class="circle">{{AssignValue.ab}}</i>
+          <span class="title">{{AssignValue.firstName}}</span>
+        </li>
+        <li class="collection-item avatar right">
+          <i ng-click="AddUser()" class="material-icons circle red">add</i>
+          <span class="title">Add user</span>
+        </li>
+      </ul>
+    </div>
   </div>
 </div>
 <div class="fixed-action-btn horizontal">
@@ -27,7 +52,7 @@
     <ul>
       <li><a onclick="$('#modalSection').modal('open');" class="btn-floating red tooltipped" data-position="top" data-delay="20" data-tooltip="Add Sections"><i class="material-icons">format_list_bulleted</i></a></li>
       <li><a onclick="$('#modalTodo').modal('open');" class="btn-floating green tooltipped" data-position="top" data-delay="20" data-tooltip="Add Task"><i class="material-icons">check</i></a></li>
-      <li><a class="btn-floating blue tooltipped" data-position="top" data-delay="20" data-tooltip="Add Project"><i class="material-icons">card_travel</i></a></li>
+      <li><a href='#/addProject' class="btn-floating blue tooltipped" data-position="top" data-delay="20" data-tooltip="Add Project"><i class="material-icons">card_travel</i></a></li>
     </ul>
   </div>
 
@@ -48,10 +73,11 @@
         </div>
         <div class="row">
           <div class="input-field col s12">
-            <input id="EndDate" name="EndDate" type="text" class="datepicker" ng-model="EndDate">
+            <input id="EndDate" name="EndDate" type="text" class="datepicker" ng-model="add_EndDate" ng-click='cls()'>
             <label for="EndDate">Due Date</label>
           </div>
         </div>
+
         <div class="row">
           <div class="input-field col s12">
             <select ng-model="addtoSectionName" ng-options="SectionValue.Name for SectionValue in project.Section"></select>
@@ -78,6 +104,23 @@
           </div>
         </div>
     </div>
+    <div class="modal-footer">
+      <button href="" class="modal-action modal-close waves-effect waves-green btn-flat ">Agree</button>
+    </div>
+    </form>
+  </div>
+
+
+  <div id="modalAddUser" class="modal modal-fixed-footer">
+    <form class="col s12" id="LoginForm" ng-submit="AddUserForm()">
+    <div class="modal-content">
+      <div class="input-field col s12 m6">
+        <!-- <input type="text" id="AddUser" class="autocomplete"> -->
+        <select ng-model="addUserTo"  multiple ng-options="User.firstName for User in userList">
+        </select>
+        <label for="AddUser">add user:</label>
+      </div>
+      
     <div class="modal-footer">
       <button href="" class="modal-action modal-close waves-effect waves-green btn-flat ">Agree</button>
     </div>

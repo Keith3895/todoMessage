@@ -4,7 +4,7 @@ var mongoose = require("mongoose");
 var MessageSchema = new mongoose.Schema({
     type		:String,
     Content		:String,
-    Time		:String,
+    Time		:Date,
     author: {
 	     type: mongoose.Schema.Types.ObjectId,
 	     ref: "User"

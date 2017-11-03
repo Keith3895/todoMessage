@@ -37,7 +37,11 @@ router.post("/register", function(req, res){
 router.get("/login",middleware.notLoggedIn, function(req, res){
    res.render("login");
 });
-
+router.get("/list", function(req, res){
+   User.find({},['firstName','lastName'],function(err,users){
+    res.send(users);
+   });
+});
 //handling login logic
 router.post('/login',
   passport.authenticate('local'),

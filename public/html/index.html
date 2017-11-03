@@ -11,7 +11,7 @@
 			<li class="collection-header"><h4>List of projects</h4></li>
 			<li class="collection-item" ng-repeat="(key, value) in projects">
 				<p>
-				  <input type="checkbox" id="test5" />
+				  <input type="checkbox" id="test5"  ng-checked="value.done" ng-click="checkedProject(value)" ng-model="value.checkedStatus"/>
 				  <label for="test5">{{value.Name}}</label>
 				</p>
 				

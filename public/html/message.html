@@ -1,0 +1,46 @@
+<link rel="stylesheet" type="text/css" href="/stylesheets/chat.css">
+<div class='chat-wrapper'>
+	<div ng-repeat="(Key, message) in Messages" id="{{message._id}}">
+		<div  class='chat-message padding'>
+			<div ng-if="!isSender(message)" class='chat-message chat-message-recipient'>
+				<div class="chat-image chat-image-default chat-avatar">{{message.author.ab}}</div>
+				<div class='chat-message-wrapper'>
+					<div class='chat-message-content'>
+						<p>{{message.Content}}</p>
+					</div>
+					<div class='chat-details'>
+						<span class='chat-message-localization font-size-small'>Time</span>
+						<span class='chat-message-read-status font-size-small'>- Date</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div ng-if="isSender(message)" class='chat-message chat-message-sender'>
+			<div class="chat-image chat-image-default chat-avatar">{{message.author.ab}}</div>
+			<div class='chat-message-wrapper'>
+				<div class='chat-message-content'>
+					<p>{{message.Content}}</p>
+				</div>
+				<div class='chat-details'>
+					<span class='chat-message-localisation font-size-small'>Time</span>
+					<span class='chat-message-read-status font-size-small'>- Date</span>
+				</div>
+			</div>
+		</div>
+	</div>		
+</div>
+
+<form class="row" style="width: 100%;position: fixed;bottom: 0;    background: whitesmoke;
+    z-index: 1000;margin-bottom: 0px" ng-submit="sendMsg()">
+  <div class="col s11">
+    <div class="input-field col s12">
+      <!-- <textarea id="textarea1" class="materialize-textarea" style="padding:0rem 0 0rem 0" ng-model='messageContent'></textarea> -->
+      <input placeholder="Message" id="message" type="text" class="validate" ng-model='messageContent'>
+      <label for="message">Message</label>
+      <!-- <label for="textarea1">Message</label> -->
+    </div>
+  </div>
+  <div class="col s1" style="    margin-top: 20px;">
+    <button style="background: transparent;"><i class="material-icons">send</i></button>
+  </div>
+</form>

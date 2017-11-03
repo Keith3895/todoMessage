@@ -18,12 +18,13 @@ module.exports = function(app,io){
   });
   io.emit('hi','everyone');
   io.on('connection',function(socket){
-    // console.log("a User Connected");
+    
     // socket.on('disconnect', function(){
    //     console.log('user disconnected');
    //   });
 
     socket.on('logged on',function(userID){
+      console.log("a User Connected");
       Todo.findOne({'_id':userID}).populate({
         path:'conversation',
         model: 'Message',
@@ -32,8 +33,9 @@ module.exports = function(app,io){
           model:'User'
         }
       }).exec(function(err,task){
-        console.log(task.conversation);
-        io.emit('add messages',task.conversation);  
+        console.log(task);
+        if(task)
+          io.emit('add messages',task.conversation);  
       });
     });
 
@@ -47,17 +49,24 @@ module.exports = function(app,io){
           Time    :msg.time,
           author    : mongoose.Types.ObjectId(msg.author.id)
         };
-        // console.log(newMsg);
-        Todo.findOne({'_id':msg.task},function(err,task){
+        console.log(newMsg);
+        Todo.findOne({'_id':msg.task}).exec(function(err,task){
           if(err)
             console.log(err);
           Message.create(newMsg,function(err,Cmsg){
             if(err)
               console.log(err);
             task.conversation.push(Cmsg);
-            task.save();
+            task.save(function(err,task){
+              User.findOne({_id:Cmsg.author},function(err,user){
+                if(err)console.log(err);
+                Cmsg.author=user;
+                io.emit('after chat message', Cmsg);       
+              });
+            });
+            
           });
-          io.emit('chat message', msg);   
+          
         });
         
       });

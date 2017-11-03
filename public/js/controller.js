@@ -1,165 +1,55 @@
 
-app.controller('ProjectController',function($scope,$rootScope,$http,$location,$route){
-    $('.tooltipped').tooltip({delay: 50});
-    $(document).ready(function(){
-		$('.collapsible').collapsible();
-	});
-	$('.modal').modal();
-	$('.datepicker').pickadate({
-	    selectMonths: true, // Creates a dropdown to control month
-	    selectYears: 15, // Creates a dropdown of 15 years to control year,
-	    today: 'Today',
-	    clear: 'Clear',
-	    close: 'Ok',
-	    closeOnSelect: true // Close upon selecting a date,
-	  });
-    $scope.formatDate = function(date){
-          var dateOut = new Date(date).toDateString();
-          return dateOut;
-    };
-    $http({
-          method: 'get',
-          url: '/projects/get/'+$rootScope.projectid,
-        }).then(function successCallback(response) {
-            console.log(response);
-            $scope.project=response.data;
-          }, function errorCallback(response) {
-            console.log('sent err: '+response);
-            Materialize.toast('Invalid details!', 4000);
-          });
+app.controller('MessageController',function($scope,$rootScope,$http,$location,$route){
+	$scope.$watch('$viewContentLoaded', function() {
+     console.log($rootScope.userProfile +"%" + $rootScope.todoId);
+		if(!$rootScope.todoId || !$rootScope.userProfile)
+			$location.path('/project');
 
-    $http({
-          method: 'get',
-          url: '/todo',
-          // data: dataSend,
-        }).then(function successCallback(response) {
-            $scope.todo=response.data;
-          }, function errorCallback(response) {
-            console.log('sent err: '+response);
-            Materialize.toast('Invalid details!', 4000);
-          });
+		// ========
+	  	var socket = io();
+	  	socket.emit('logged on',$rootScope.todoId);
+	  	socket.on('add messages',function(msg){
+	  		console.log("add");
+	    	
+	    	$scope.$apply(function () {
+	    		$scope.Messages = msg;
+	    	});
+	    	scroll_id = msg[msg.length-1]['_id'];
+	    	$('html,body').animate({scrollTop: $('#'+scroll_id).offset().top }, "slow");
+	    });
+		var date = new Date();
+	    socket.on('after chat message', function(msg1){
+	    	$scope.$apply(function () {
+	      		$scope.Messages.push(msg1);
+	      	});
+	      	scroll_id = msg1._id;
+	      	console.log(scroll_id);
+	    	$('html,body').animate({scrollTop: $('#'+scroll_id).offset().top }, "slow");
+	    });
 
-    $scope.addTaskModal=function(sec){
-    	$scope.addtoSectionName = sec;
-    	$('#modalTodo').modal('open');
-		$('select').material_select();
-    	
-    }
-    $scope.addTask	=	function(){
+	    // ========
+		$scope.isSender = function(msg){
+			if(msg.author._id == $rootScope.userProfile._id){
+				return true;
+			}
+			return false;
+		}
+		$scope.sendMsg = function(){
+		    	msg= {
+		    		message: $scope.messageContent,
+		    		type: 'text',
+		    		time: date,
+		    		author:{
+		    			id: $rootScope.userProfile._id,
+		    			username: $rootScope.userProfile.username
+		    		},
+		    		task : $rootScope.todoId
+		    	};
+		    	// console.log(msg);
+		      socket.emit('chat message',msg);
+		      delete $scope.messageContent;
+		  	}
+  });
+		
 
-    	dataSend={
-    		Content : $scope.Content,
-    		Cdate	: new Date(),
-    		EndDate : new Date($scope.EndDate),
-    		SectionId: $scope.addtoSectionName._id,
-    		// SectionId:$scope.addtoSectionId
-    	};
-    	$http({
-          method: 'post',
-          url: '/todo/addtask',
-          headers: {
-			'Content-Type': 'application/json'
-		  },
-          data: dataSend,
-        }).then(function successCallback(response) {
-            console.log(response);
-            // if(response.data.Name==dataSend.Name)
-            	$route.reload();
-            // Materialize.toast('Invalid details!', 4000);
-          }, function errorCallback(response) {
-            console.log('sent err: '+response);
-            Materialize.toast('Invalid details!', 4000);
-          });
-    }
-    $scope.addSection	=	function(){
-    	dataSend={
-    		SectionName : $scope.Name,
-    		projectId : $scope.project._id
-    	};
-    	$http({
-          method: 'post',
-          url: '/projects/addSection',
-          headers: {
-			'Content-Type': 'application/json'
-		  },
-          data: dataSend,
-        }).then(function successCallback(response) {
-            console.log(response);
-            if(response.data=='err')
-            	Materialize.toast('Section already exists!', 4000);
-            else	
-            	$route.reload();
-          }, function errorCallback(response) {
-            console.log('sent err: '+response);
-            Materialize.toast('Invalid details!', 4000);
-          });
-    }
 });
-
-
-
-app.controller('HomeController',function($scope,$rootScope,$http,$location){
-    $('.tooltipped').tooltip({delay: 50});
-    $scope.formatDate = function(date){
-          var dateOut = new Date(date).toDateString();
-
-          return dateOut;
-    };
-    $scope.openProject=function(id){
-    	console.log(id);
-    	$rootScope.projectid = id;
-    	$location.path('/project');
-    };
-    $http({
-          method: 'get',
-          url: '/projects/',
-          // data: dataSend,
-        }).then(function successCallback(response) {
-            console.log(response);
-            $scope.projects=response.data;
-          }, function errorCallback(response) {
-            console.log('sent err: '+response);
-            Materialize.toast('Invalid details!', 4000);
-          });
-});
-
-
-app.controller('addProjectController',function($scope,$rootScope,$http,$location){
-    $('.datepicker').pickadate({
-	    selectMonths: true, // Creates a dropdown to control month
-	    selectYears: 15, // Creates a dropdown of 15 years to control year,
-	    today: 'Today',
-	    clear: 'Clear',
-	    close: 'Ok',
-	    closeOnSelect: true // Close upon selecting a date,
-	  });
-    $scope.addProject = function(){
-
-    	dataSend = {
-    		Name: $scope.projectName,
-    		Cdate: new Date(),
-    		EndDate:new Date($scope.EndDate)
-    	};
-    	console.log(dataSend);
-    	// $http.post('/auth/login');
-        $http({
-          method: 'post',
-          url: '/projects/add',
-          headers: {
-			'Content-Type': 'application/json'
-		  },
-          data: dataSend,
-        }).then(function successCallback(response) {
-            console.log(response);
-            if(response.data.Name==dataSend.Name)
-            	$location.path('/home');
-            Materialize.toast('Invalid details!', 4000);
-          }, function errorCallback(response) {
-            console.log('sent err: '+response);
-            Materialize.toast('Invalid details!', 4000);
-          });
-    }  
-});
-
-
-
